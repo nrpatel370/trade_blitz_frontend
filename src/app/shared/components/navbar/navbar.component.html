@@ -1,0 +1,56 @@
+
+<!-- R-0001: Navigation bar with home, profile, player rankings, trade analyzer -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/" class="brand-logo">
+        <span class="logo-icon">🏈</span>
+        <span class="brand-name">Trade Blitz</span>
+      </a>
+    </div>
+
+    <div class="navbar-menu">
+      <a 
+        routerLink="/" 
+        routerLinkActive="active" 
+        [routerLinkActiveOptions]="{exact: true}"
+        class="nav-link">
+        Home
+      </a>
+      <a 
+        routerLink="/player-rankings" 
+        routerLinkActive="active"
+        class="nav-link">
+        Player Rankings
+      </a>
+      <a 
+        routerLink="/trade-analyzer" 
+        routerLinkActive="active"
+        class="nav-link">
+        Trade Analyzer
+      </a>
+    </div>
+
+    <div class="navbar-actions">
+      <!-- R-0007: If user is not signed in, show sign in button -->
+      <ng-container *ngIf="!isAuthenticated">
+        <a routerLink="/login" class="btn btn-outline">Sign In</a>
+        <a routerLink="/register" class="btn btn-primary">Get Started</a>
+      </ng-container>
+
+      <!-- R-0007: If user is signed in, show profile link -->
+      <ng-container *ngIf="isAuthenticated">
+        <div class="user-menu">
+          <a routerLink="/profile" class="profile-link">
+            <img 
+              [src]="currentUser?.profileIcon || 'assets/default-avatar.png'" 
+              alt="Profile" 
+              class="profile-icon-small">
+            <span class="username">{{ currentUser?.username }}</span>
+          </a>
+          <button (click)="onLogout()" class="btn btn-text">Sign Out</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nav>

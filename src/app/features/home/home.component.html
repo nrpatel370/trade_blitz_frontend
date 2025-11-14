@@ -1,0 +1,118 @@
+
+<div class="home-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-title">Master Your Fantasy Football Trades</h1>
+    <p class="hero-subtitle">
+      Get instant AI-powered analysis of your trades and optimize your roster
+    </p>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- R-0004: Best Performers Column (Left) -->
+    <div class="performers-column">
+      <div class="performers-card best-performers">
+        <h2 class="card-title">
+          <span class="icon">🔥</span>
+          Top Performers
+        </h2>
+        <p class="card-subtitle">Last week's standout players</p>
+        
+        <div class="performers-list" *ngIf="!isLoadingBest && bestPerformers.length > 0">
+          <div class="performer-item" *ngFor="let player of bestPerformers; let i = index">
+            <span class="rank">{{ i + 1 }}</span>
+            <div class="player-info">
+              <span class="player-name">{{ getPlayerName(player) }}</span>
+              <span class="player-team">{{ getTeamName(player) }} - {{ player.position }}</span>
+            </div>
+            <span class="player-points best">{{ getActualPoints(player).toFixed(1) }} pts</span>
+          </div>
+        </div>
+
+        <div class="loading-state" *ngIf="isLoadingBest">
+          <p>Loading top performers...</p>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoadingBest && bestPerformers.length === 0">
+          <p>No performance data available yet</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- R-0002 & R-0003: Center Content -->
+    <div class="center-content">
+      <!-- R-0002: Trade Analyzer Component -->
+      <div class="feature-card trade-analyzer-card">
+        <div class="feature-icon">📊</div>
+        <h2 class="feature-title">Trade Analyzer</h2>
+        <p class="feature-description">
+          Get instant AI-powered analysis of your fantasy football trades. Our analyzer 
+          evaluates player values, team needs, and strategic fit to help you make 
+          winning decisions.
+        </p>
+        <ul class="feature-list">
+          <li>Real-time player valuations</li>
+          <li>Roster strength analysis</li>
+          <li>Win-now vs. future value assessment</li>
+          <li>Alternative trade suggestions</li>
+        </ul>
+        <a routerLink="/trade-analyzer" class="feature-button">
+          Analyze Your Trade
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <!-- R-0003: Player Rankings Component -->
+      <div class="feature-card player-rankings-card">
+        <div class="feature-icon">🏆</div>
+        <h2 class="feature-title">Player Rankings</h2>
+        <p class="feature-description">
+          Access comprehensive fantasy football rankings updated in real-time. Filter 
+          by position, league format, and timeframe to find exactly what you need for 
+          your roster decisions.
+        </p>
+        <ul class="feature-list">
+          <li>Weekly and rest-of-season rankings</li>
+          <li>PPR and Half-PPR formats</li>
+          <li>Position-specific filters</li>
+          <li>Projected points and trends</li>
+        </ul>
+        <a routerLink="/player-rankings" class="feature-button">
+          View Rankings
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- R-0005: Worst Performers Column (Right) -->
+    <div class="performers-column">
+      <div class="performers-card worst-performers">
+        <h2 class="card-title">
+          <span class="icon">📉</span>
+          Buy Low Candidates
+        </h2>
+        <p class="card-subtitle">Last week's underperformers</p>
+        
+        <div class="performers-list" *ngIf="!isLoadingWorst && worstPerformers.length > 0">
+          <div class="performer-item" *ngFor="let player of worstPerformers; let i = index">
+            <span class="rank">{{ i + 1 }}</span>
+            <div class="player-info">
+              <span class="player-name">{{ getPlayerName(player) }}</span>
+              <span class="player-team">{{ getTeamName(player) }} - {{ player.position }}</span>
+            </div>
+            <span class="player-points worst">{{ getActualPoints(player).toFixed(1) }} pts</span>
+          </div>
+        </div>
+
+        <div class="loading-state" *ngIf="isLoadingWorst">
+          <p>Loading underperformers...</p>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoadingWorst && worstPerformers.length === 0">
+          <p>No performance data available yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
