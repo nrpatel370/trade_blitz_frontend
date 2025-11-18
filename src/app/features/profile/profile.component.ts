@@ -37,11 +37,9 @@ export class ProfileComponent implements OnInit {
   // R-0014, R-0015: Edit profile icon
   isEditingIcon = false;
   availableIcons = [
-    'assets/avatars/avatar1.png',
-    'assets/avatars/avatar2.png',
-    'assets/avatars/avatar3.png',
-    'assets/avatars/avatar4.png',
-    'assets/default-avatar.png'
+    '/assets/avatars/avatar1.png',
+    '/assets/avatars/avatar2.jpg',
+    '/assets/default-avatar.svg'
   ];
   selectedIcon = '';
 
@@ -97,7 +95,7 @@ export class ProfileComponent implements OnInit {
   // R-0014: Show icon selector on hover (implemented in template)
   startEditIcon(): void {
     this.isEditingIcon = true;
-    this.selectedIcon = this.user?.profileIcon || 'assets/default-avatar.png';
+    this.selectedIcon = this.user?.profileIcon || '/assets/default-avatar.svg';
   }
 
   // R-0015: Save icon change
