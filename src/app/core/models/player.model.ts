@@ -24,6 +24,8 @@ export interface PlayerRanking {
   opponent: string;
   fantasy_points: number;
   fantasy_points_ppr: number;
+  projected_points: number;       
+  projected_points_ppr: number;   
   is_game_over: boolean;
   age: number | null;
   rank: number;

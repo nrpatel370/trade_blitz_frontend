@@ -40,6 +40,10 @@
   gap: 1rem;
 }
 
+#filters-div {
+  display: block;
+}
+
 .filters {
   display: flex;
   gap: 1.5rem;
@@ -118,6 +122,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+#sync-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
+  margin-bottom: 20px;
 }
 
 .btn-sync:hover:not(:disabled) {
@@ -297,7 +308,85 @@
   color: #b8b8d1;
   margin-bottom: 2rem;
 }
+/* Sortable columns */
+/* Sortable columns */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
 
+.sortable:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.sort-indicator {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-weight: bold;
+}
+
+.sort-indicator .active {
+  color: #667eea;
+  font-size: 1rem;
+}
+
+.sort-indicator .inactive {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+}
+
+/* Projected points cell */
+.projected-points-cell {
+  color: #a78bfa;
+  font-size: 1.05rem;
+}
+
+.projected-points-cell strong {
+  color: #a78bfa;
+}
+
+/* Secondary sync button */
+.btn-sync-secondary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+}
+
+.btn-sync-secondary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+/* Future week indicators */
+.future-week-indicator {
+  color: #7a7a8c;
+  font-style: italic;
+}
+
+.projected-label {
+  font-size: 0.75rem;
+  color: #a78bfa;
+  font-weight: normal;
+  margin-left: 0.25rem;
+}
+
+.week-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.75rem;
+}
+
+.week-status.future {
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+}
+
+.week-status.past {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
 /* Responsive */
 @media (max-width: 768px) {
   .rankings-table-container {
