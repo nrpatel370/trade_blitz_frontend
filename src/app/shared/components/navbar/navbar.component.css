@@ -30,8 +30,13 @@
   gap: 0.5rem;
 }
 
-.logo-icon {
-  font-size: 2rem;
+#logo-icon {
+  height: 25px;
+  width: 25x;
+}
+
+#logo-container {
+  padding-top: 8px;
 }
 
 .brand-name {

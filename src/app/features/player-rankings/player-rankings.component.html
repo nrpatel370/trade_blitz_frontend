@@ -1,21 +1,204 @@
+<div class="rankings-container">
+  <div class="rankings-content">
+    <!-- Header -->
+    <div class="rankings-header">
+     <h1 class="page-title">Player Rankings</h1>
+      <p class="page-subtitle">
+        Week {{ currentWeek }} - {{ currentSeason }} Season
+        <span class="week-status" [class.future]="isFutureWeek()" [class.past]="!isFutureWeek()">
+          {{ isFutureWeek() ? '(Upcoming)' : '(Completed)' }}
+        </span>
+      </p>
+    </div>
 
-    <div class="page-container">
-      <div class="page-content">
-        <h1 class="page-title">Player Rankings</h1>
-        <p class="page-subtitle">
-          Filter and view player rankings by position, week, and league format
-        </p>
-        <div class="coming-soon">
-          <div class="icon">🏆</div>
-          <h2>Coming Soon</h2>
-          <p>Player rankings feature will be implemented with requirements R-0016 through R-0025</p>
-          <ul class="feature-list">
-            <li>Weekly and Rest of Season rankings</li>
-            <li>PPR and Half-PPR formats</li>
-            <li>Position-specific filters</li>
-            <li>Sortable columns</li>
-            <li>Projected points</li>
-          </ul>
+    <!-- Filters and Controls -->
+     <div id="filters-div">
+      <div class="controls-section">
+      <div class="filters">
+        <!-- Week Selector -->
+        <div class="filter-group">
+          <label for="week">Week</label>
+          <select id="week" [(ngModel)]="currentWeek" (change)="onWeekChange()">
+            <option *ngFor="let w of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]" [value]="w">
+              Week {{ w }}
+            </option>
+          </select>
         </div>
+
+        <!-- Scoring Type Toggle -->
+        <div class="filter-group">
+          <label>Scoring</label>
+          <div class="toggle-buttons">
+            <button 
+              class="toggle-btn" 
+              [class.active]="scoringType === 'standard'"
+              (click)="scoringType = 'standard'; onScoringTypeChange()">
+              Standard
+            </button>
+            <button 
+              class="toggle-btn" 
+              [class.active]="scoringType === 'ppr'"
+              (click)="scoringType = 'ppr'; onScoringTypeChange()">
+              PPR
+            </button>
+          </div>
+        </div>
+
+        <!-- Position Filter -->
+        <div class="filter-group">
+          <label for="position">Position</label>
+          <select id="position" [(ngModel)]="selectedPosition" (change)="onPositionChange()">
+            <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+          </select>
+        </div>
+      
+
+       <!--Team Filter -->
+        <div class="filter-group">
+          <label for="team">Team</label>
+          <select id="team" [(ngModel)]="selectedTeam" (change)="onTeamChange()">
+            <option *ngFor="let team of teams" [value]="team">{{ team }}</option>
+          </select>
+        </div>
+    </div>
+     </div>
+    
+
+    <div id="sync-button-container">
+       <!-- Sync Button -->
+      <button 
+        class="btn-sync btn-sync-secondary" 
+        (click)="syncRankings()" 
+        [disabled]="isSyncing">
+        <span *ngIf="!isSyncing">Sync Latest Data</span>
+        <span *ngIf="isSyncing">Syncing...</span>
+      </button>
+
+      <!--Sync Projections Button -->
+     <button 
+        class="btn-sync btn-sync-secondary" 
+        (click)="syncProjections()" 
+        [disabled]="isSyncingProjections">
+        <span *ngIf="!isSyncingProjections">Sync Projections</span>
+        <span *ngIf="isSyncingProjections">Syncing...</span>
+      </button>
+    </div>   
+
+    <!-- Messages -->
+    <div class="message success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+    <div class="message error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading rankings...</p>
+    </div>
+
+    <!-- Rankings Table -->
+    <div class="rankings-table-container" *ngIf="!isLoading && filteredRankings.length > 0">
+      <table class="rankings-table">
+       <thead>
+          <tr>
+            <th class="sortable" (click)="onSortChange('rank')">
+              Rank 
+              <span class="sort-indicator">
+                <span *ngIf="sortBy === 'rank' && sortOrder === 'desc'" class="active">↓</span>
+                <span *ngIf="sortBy === 'rank' && sortOrder === 'asc'" class="active">↑</span>
+                <span *ngIf="sortBy !== 'rank'" class="inactive">↕</span>
+              </span>
+            </th>
+            <th>Player Name</th>
+            <th>Position</th>
+            <th class="sortable" (click)="onSortChange('team')">
+              Team
+              <span class="sort-indicator">
+                <span *ngIf="sortBy === 'team' && sortOrder === 'desc'" class="active">↓</span>
+                <span *ngIf="sortBy === 'team' && sortOrder === 'asc'" class="active">↑</span>
+                <span *ngIf="sortBy !== 'team'" class="inactive">↕</span>
+              </span>
+            </th>
+            <th>Opponent</th>
+            <th>Age</th>
+            <th class="sortable" (click)="onSortChange('points')">
+              <ng-container *ngIf="!isFutureWeek()">Fantasy Points</ng-container>
+              <ng-container *ngIf="isFutureWeek()">Fantasy Points (Actual)</ng-container>
+              <span class="sort-indicator">
+                <span *ngIf="sortBy === 'points' && sortOrder === 'desc'" class="active">↓</span>
+                <span *ngIf="sortBy === 'points' && sortOrder === 'asc'" class="active">↑</span>
+                <span *ngIf="sortBy !== 'points'" class="inactive">↕</span>
+              </span>
+            </th>
+            <th class="sortable" (click)="onSortChange('projected')">
+              <ng-container *ngIf="!isFutureWeek()">Projected Points</ng-container>
+              <ng-container *ngIf="isFutureWeek()">Projected Points</ng-container>
+              <span class="sort-indicator">
+                <span *ngIf="sortBy === 'projected' && sortOrder === 'desc'" class="active">↓</span>
+                <span *ngIf="sortBy === 'projected' && sortOrder === 'asc'" class="active">↑</span>
+                <span *ngIf="sortBy !== 'projected'" class="inactive">↕</span>
+              </span>
+            </th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ranking of filteredRankings" class="ranking-row">
+            <td class="rank-cell">{{ ranking.rank }}</td>
+            <td class="player-name-cell">
+              <strong>{{ ranking.player_name }}</strong>
+            </td>
+            <td>
+              <span 
+                class="position-badge" 
+                [style.background-color]="getPositionColor(ranking.position)">
+                {{ ranking.position }}
+              </span>
+            </td>
+            <td>{{ ranking.team_name }}</td>
+            <td class="opponent-cell">
+              <span class="vs">vs</span> {{ ranking.opponent }}
+            </td>
+            <td>{{ ranking.age || 'N/A' }}</td>
+            <td class="points-cell">
+              <ng-container *ngIf="!isFutureWeek()">
+                <strong>{{ getFantasyPoints(ranking) }}</strong>
+              </ng-container>
+              <ng-container *ngIf="isFutureWeek()">
+                <span class="future-week-indicator">-</span>
+              </ng-container>
+            </td>
+            <td class="projected-points-cell">
+              <strong>{{ getProjectedPoints(ranking)}}</strong>
+              <span class="projected-label" *ngIf="isFutureWeek()"> (Est.)</span>
+            </td>
+            <td>
+              <span 
+                class="status-badge" 
+                [class.complete]="ranking.is_game_over"
+                [class.pending]="!ranking.is_game_over">
+                {{ ranking.is_game_over ? 'Final' : 'Scheduled' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Results Info -->
+      <div class="results-info">
+        Showing {{ filteredRankings.length }} of {{ rankings.length }} players
       </div>
     </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredRankings.length === 0">
+      <h3>No Rankings Available</h3>
+      <p>No player data found for Week {{ currentWeek }}.</p>
+      <button class="btn-sync" (click)="syncRankings()">
+        Sync Data from API
+      </button>
+    </div>
+  </div>
+</div>

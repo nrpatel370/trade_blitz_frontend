@@ -6,7 +6,7 @@
            (mouseenter)="isEditingIcon ? null : startEditIcon()"
            [class.editing]="isEditingIcon">
         <img 
-          [src]="user?.profileIcon || 'assets/default-avatar.png'" 
+          [src]="user?.profileIcon || '/assets/default-avatar.svg'" 
           alt="Profile" 
           class="profile-icon">
         

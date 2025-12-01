@@ -15,3 +15,26 @@ export interface Player {
   added_at?: Date;
   addedAt?: Date;
 }
+
+export interface PlayerRanking {
+  ranking_id: number;
+  player_name: string;
+  position: string;
+  team_name: string;
+  opponent: string;
+  fantasy_points: number;
+  fantasy_points_ppr: number;
+  projected_points: number;       
+  projected_points_ppr: number;   
+  is_game_over: boolean;
+  age: number | null;
+  rank: number;
+}
+
+export interface RankingsResponse {
+  week: number;
+  season: number;
+  scoringType: string;
+  count: number;
+  rankings: PlayerRanking[];
+}

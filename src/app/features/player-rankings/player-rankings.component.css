@@ -1,0 +1,412 @@
+.rankings-container {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  padding: 2rem;
+}
+
+.rankings-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.rankings-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: #b8b8d1;
+  font-size: 1.2rem;
+}
+
+/* Controls */
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#filters-div {
+  display: block;
+}
+
+.filters {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  color: #b8b8d1;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.filter-group select {
+  padding: 0.625rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.filter-group select option {
+  background: #1a1a2e;
+  color: white;
+}
+
+/* Toggle Buttons */
+.toggle-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toggle-btn {
+  padding: 0.625rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #b8b8d1;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+  color: white;
+}
+
+/* Sync Button */
+.btn-sync {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#sync-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
+  margin-bottom: 20px;
+}
+
+.btn-sync:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-sync:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Messages */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.error-message {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #b8b8d1;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Rankings Table */
+.rankings-table-container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rankings-table thead {
+  background: rgba(102, 126, 234, 0.1);
+  border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.rankings-table th {
+  padding: 1rem;
+  text-align: left;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rankings-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.rankings-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.rankings-table td {
+  padding: 1rem;
+  color: #b8b8d1;
+  font-size: 0.95rem;
+}
+
+.rank-cell {
+  color: #667eea;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.player-name-cell strong {
+  color: white;
+}
+
+.position-badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.opponent-cell {
+  font-weight: 500;
+}
+
+.vs {
+  color: #7a7a8c;
+  font-size: 0.85rem;
+  margin-right: 0.25rem;
+}
+
+.points-cell {
+  color: white;
+  font-size: 1.05rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.complete {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.status-badge.pending {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+/* Results Info */
+.results-info {
+  padding: 1rem;
+  text-align: center;
+  color: #b8b8d1;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #b8b8d1;
+  margin-bottom: 2rem;
+}
+/* Sortable columns */
+/* Sortable columns */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.sortable:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.sort-indicator {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-weight: bold;
+}
+
+.sort-indicator .active {
+  color: #667eea;
+  font-size: 1rem;
+}
+
+.sort-indicator .inactive {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+}
+
+/* Projected points cell */
+.projected-points-cell {
+  color: #a78bfa;
+  font-size: 1.05rem;
+}
+
+.projected-points-cell strong {
+  color: #a78bfa;
+}
+
+/* Secondary sync button */
+.btn-sync-secondary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+}
+
+.btn-sync-secondary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+/* Future week indicators */
+.future-week-indicator {
+  color: #7a7a8c;
+  font-style: italic;
+}
+
+.projected-label {
+  font-size: 0.75rem;
+  color: #a78bfa;
+  font-weight: normal;
+  margin-left: 0.25rem;
+}
+
+.week-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.75rem;
+}
+
+.week-status.future {
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+}
+
+.week-status.past {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .rankings-table-container {
+    overflow-x: auto;
+  }
+
+  .rankings-table {
+    min-width: 800px;
+  }
+
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters {
+    width: 100%;
+  }
+
+  .filter-group select {
+    width: 100%;
+  }
+}

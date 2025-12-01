@@ -11,25 +11,36 @@ export class PlayerService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/players`;
 
-  getPlayerRankings(filters?: {
-    rankingType?: string;
-    week?: number;
-    season?: number;
-    format?: string;
-    position?: string;
-  }): Observable<any> {
-    let params = new HttpParams();
+  getPlayerRankings(
+    week: number = 10, 
+    season: number = 2025, 
+    scoringType: string = 'standard',
+    sortBy: string = 'points',
+    sortOrder: string = 'desc',
+    team: string | null = null
+  ): Observable<any> {
+    let params = new HttpParams()
+      .set('week', week.toString())
+      .set('season', season.toString())
+      .set('scoringType', scoringType)
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
     
-    if (filters) {
-      Object.keys(filters).forEach(key => {
-        const value = (filters as any)[key];
-        if (value !== undefined && value !== null) {
-          params = params.set(key, value.toString());
-        }
-      });
+    if (team) {
+      params = params.set('team', team);
     }
     
-    return this.http.get(`${this.apiUrl}/rankings`, { params });
+    return this.http.get(`${environment.apiUrl}/rankings`, { params });
+  }
+
+  // Sync rankings from API
+  syncRankings(week: number, seasonType: string = 'REG'): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/rankings/sync`, { week, seasonType });
+  }
+
+  // Sync projections from API
+  syncProjections(week: number, seasonType: string = 'REG'): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/rankings/sync-future-week`, { week, seasonType });
   }
 
   searchPlayers(query: string, position?: string): Observable<{ players: Player[] }> {
@@ -54,5 +65,10 @@ export class PlayerService {
       params = params.set('week', week.toString());
     }
     return this.http.get(`${this.apiUrl}/worst-performers`, { params });
+  }
+
+  // Sync future week projections
+  syncFutureWeek(week: number, seasonType: string = 'REG'): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/rankings/sync-future-week`, { week, seasonType });
   }
 }

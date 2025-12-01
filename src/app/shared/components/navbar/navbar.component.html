@@ -4,7 +4,9 @@
   <div class="navbar-container">
     <div class="navbar-brand">
       <a routerLink="/" class="brand-logo">
-        <span class="logo-icon">🏈</span>
+        <div id="logo-container">
+          <img id="logo-icon" src="/logo.svg" alt="trade blitz logo">
+        </div>
         <span class="brand-name">Trade Blitz</span>
       </a>
     </div>
@@ -43,7 +45,7 @@
         <div class="user-menu">
           <a routerLink="/profile" class="profile-link">
             <img 
-              [src]="currentUser?.profileIcon || 'assets/default-avatar.png'" 
+              [src]="currentUser?.profileIcon || '/assets/default-avatar.svg'" 
               alt="Profile" 
               class="profile-icon-small">
             <span class="username">{{ currentUser?.username }}</span>
