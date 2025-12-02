@@ -1,4 +1,3 @@
-/* ===== src/app/features/profile/profile.component.css ===== */
 
 .profile-container {
   min-height: calc(100vh - 80px);
@@ -200,7 +199,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .form-group label {
@@ -244,6 +243,7 @@
   padding: 1.5rem;
   transition: all 0.3s ease;
 }
+
 
 .roster-card:hover {
   transform: translateY(-5px);
@@ -348,13 +348,13 @@
   font-size: 0.85rem;
 }
 
-.search-input-wrapper {
+.search-wrapper {
   position: relative;
   margin-bottom: 1rem;
 }
 
 .search-input {
-  width: 100%;
+  width: 90%;
   padding: 0.875rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -371,24 +371,64 @@
 .searching {
   position: absolute;
   right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 1rem;
   color: #667eea;
   font-size: 0.85rem;
-}
-
-.search-results {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.search-result-item {
-  cursor: pointer;
 }
 
 .roster-editor-actions {
   display: flex;
   justify-content: flex-end;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 12, 41, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 3000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.search-results-dropdown .search-result-item {
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-results-dropdown .search-result-item:hover {
+  background: rgba(102, 126, 234, 0.15);
+}
+
+.search-results-dropdown .search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-results-dropdown .player-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.search-results-dropdown .player-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.search-results-dropdown .player-position {
+  color: #b8b8d1;
+  font-size: 0.85rem;
 }
 
 /* Buttons */
@@ -470,19 +510,212 @@
   color: #667eea;
 }
 
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
+/* Delete Button */
+.btn-delete {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
 
+.btn-delete:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.roster-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Roster Slots */
+.roster-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.roster-slot {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.slot-label {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.slot-position {
+  color: #b8b8d1;
+  font-size: 0.85rem;
+}
+
+.slot-content {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.player-in-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 6px;
+}
+
+.btn-add-player {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: #b8b8d1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-player:hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
+/* Create Roster Modal */
+.create-roster-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.modal-content {
+  position: relative;
+  z-index: 2;
+  background: rgba(26, 26, 46, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 400px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: visible; 
+}
+
+.modal-body {
+  margin-bottom: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto; 
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3,
+.modal-header h4 {
+  color: white;
+  margin: 0;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #b8b8d1;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover {
+  color: white;
+}
+
+.input-field {
+  width: 80%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.input-field option {
+  background: #1a1a2e;
+  color: white;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* Player Search Modal */
+.player-search-modal .modal-content {
+  min-width: 500px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #b8b8d1;
+}
+
+@media (max-width: 768px) {
   .roster-editor-content {
     grid-template-columns: 1fr;
   }
 
-  .icon-selector {
-    left: 50%;
-    top: 120%;
-    transform: translateX(-50%);
+  .modal-content {
+    min-width: 90vw;
+  }
+
+  .player-search-modal .modal-content {
+    min-width: 90vw;
   }
 }

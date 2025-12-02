@@ -15,3 +15,24 @@ export interface CreateRosterRequest {
   rosterName: string;
   leagueFormat?: 'PPR' | 'Half-PPR' | 'Standard';
 }
+
+export interface RosterPosition {
+  roster_position_id: number;
+  position_slot: string;
+  player_id: number | null;
+  player_name: string | null;
+  team_name: string | null;
+  position: string | null;
+  age: number | null;
+}
+
+export interface RosterWithPositions {
+  roster: Roster;
+  positions: RosterPosition[];
+}
+
+export interface RosterSlotConfig {
+  slot: string;
+  position: string;
+  label: string;
+}

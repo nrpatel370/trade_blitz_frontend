@@ -1,21 +1,192 @@
+<div class="trade-analyzer-container">
+  <div class="trade-analyzer-content">
+    <!-- Header -->
+    <div class="analyzer-header">
+      <h1 class="page-title">Trade Analyzer</h1>
+      <p class="page-subtitle">Evaluate your fantasy football trades</p>
+    </div>
 
-    <div class="page-container">
-      <div class="page-content">
-        <h1 class="page-title">Trade Analyzer</h1>
-        <p class="page-subtitle">
-          Analyze your fantasy football trades with AI-powered insights
-        </p>
-        <div class="coming-soon">
-          <h2>Coming Soon</h2>
-          <p>Trade analyzer feature will be implemented with requirements R-0026 through R-0040</p>
-          <ul class="feature-list">
-            <li>View current roster strengths/weaknesses</li>
-            <li>Add players to give/receive</li>
-            <li>AI-powered trade evaluation</li>
-            <li>Trade grade and recommendations</li>
-            <li>Alternative trade suggestions</li>
-          </ul>
+    <!-- R-0026, R-0028: Roster Selection -->
+    <div class="roster-selection">
+      <label for="rosterSelect">Select Your Roster:</label>
+      <select 
+        id="rosterSelect" 
+        [(ngModel)]="selectedRoster" 
+        (change)="selectRoster(selectedRoster!)"
+        class="roster-select">
+        <option [ngValue]="null" disabled>Choose a roster...</option>
+        <option *ngFor="let roster of rosters" [ngValue]="roster">
+          {{ getRosterName(roster) }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Show message if no roster selected -->
+    <div class="no-roster-message" *ngIf="!selectedRoster">
+      <p>Please select a roster to start analyzing trades</p>
+    </div>
+
+    <!-- Trade Boxes -->
+    <div class="trade-boxes" *ngIf="selectedRoster">
+      <!-- R-0029: Giving Away Box -->
+      <div class="trade-box giving-box">
+        <div class="box-header">
+          <h2>Giving Away</h2>
+          <!-- R-0030: Add Player Button -->
+          <!-- R-0030: Add Player Button -->
+          <div class="search-container">
+            <input 
+              type="text"
+              [(ngModel)]="searchQueryGiving"
+              (input)="searchPlayersGiving()"
+              placeholder="Search player to add..."
+              class="player-search-input">
+            <span *ngIf="isSearchingGiving" class="searching">...</span>
+            
+            <!-- Search Results - MOVED INSIDE CONTAINER -->
+            <div class="search-results" *ngIf="searchResultsGiving.length > 0">
+              <div 
+                *ngFor="let player of searchResultsGiving" 
+                class="search-result-item"
+                (click)="addPlayerGiving(player)">
+                <span class="player-name">{{ getPlayerName(player) }}</span>
+                <span class="player-details">{{ player.position }} - {{ getTeamName(player) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- R-0031: Players in Box -->
+        <div class="players-list">
+          <div *ngIf="playersGivingAway.length === 0" class="empty-state">
+            <p>No players added yet</p>
+            <p class="hint">Search and add players above</p>
+          </div>
+
+          <div 
+            *ngFor="let tradePlayer of playersGivingAway; let i = index" 
+            class="player-card giving">
+            <div class="player-info">
+              <span class="player-name">{{ getPlayerName(tradePlayer.player) }}</span>
+              <span class="player-position">
+                {{ tradePlayer.player.position }} - {{ getTeamName(tradePlayer.player) }}
+              </span>
+            </div>
+            <!-- R-0032: Remove Button -->
+            <button (click)="removePlayerGiving(i)" class="btn-remove">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- R-0029: Receiving Box -->
+      <div class="trade-box receiving-box">
+        <div class="box-header">
+          <h2>Receiving</h2>
+          <!-- R-0030: Add Player Button -->
+          <!-- R-0030: Add Player Button -->
+          <div class="search-container">
+            <input 
+              type="text"
+              [(ngModel)]="searchQueryReceiving"
+              (input)="searchPlayersReceiving()"
+              placeholder="Search player to add..."
+              class="player-search-input">
+            <span *ngIf="isSearchingReceiving" class="searching">...</span>
+            
+            <!-- Search Results - MOVED INSIDE CONTAINER -->
+            <div class="search-results" *ngIf="searchResultsReceiving.length > 0">
+              <div 
+                *ngFor="let player of searchResultsReceiving" 
+                class="search-result-item"
+                (click)="addPlayerReceiving(player)">
+                <span class="player-name">{{ getPlayerName(player) }}</span>
+                <span class="player-details">{{ player.position }} - {{ getTeamName(player) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- R-0031: Players in Box -->
+        <div class="players-list">
+          <div *ngIf="playersReceiving.length === 0" class="empty-state">
+            <p>No players added yet</p>
+            <p class="hint">Search and add players above</p>
+          </div>
+
+          <div 
+            *ngFor="let tradePlayer of playersReceiving; let i = index" 
+            class="player-card receiving">
+            <div class="player-info">
+              <span class="player-name">{{ getPlayerName(tradePlayer.player) }}</span>
+              <span class="player-position">
+                {{ tradePlayer.player.position }} - {{ getTeamName(tradePlayer.player) }}
+              </span>
+            </div>
+            <!-- R-0032: Remove Button -->
+            <button (click)="removePlayerReceiving(i)" class="btn-remove">✕</button>
+          </div>
         </div>
       </div>
     </div>
-  
+
+    <!-- Action Buttons -->
+    <div class="action-buttons" *ngIf="selectedRoster">
+      <!-- R-0033: Evaluate Trade Button -->
+      <button 
+        (click)="evaluateTrade()" 
+        class="btn btn-evaluate"
+        [disabled]="isEvaluating || !isTradeValid()">
+        <span *ngIf="!isEvaluating">⚖️ Evaluate Trade</span>
+        <span *ngIf="isEvaluating">⏳ Analyzing...</span>
+      </button>
+
+      <!-- R-0034: Clear Trade Button -->
+      <button 
+        (click)="clearTrade()" 
+        class="btn btn-clear"
+        [disabled]="playersGivingAway.length === 0 && playersReceiving.length === 0">
+        🗑️ Clear Trade
+      </button>
+    </div>
+
+    <!-- R-0035: Validation Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Trade Evaluation Results -->
+    <div class="trade-results" *ngIf="tradeEvaluated">
+      <div class="results-card" [ngClass]="getTradeGradeClass()">
+        <div class="grade-section">
+          <h2>Trade Grade</h2>
+          <div class="grade-display">{{ tradeGrade }}</div>
+        </div>
+
+        <div class="analysis-section">
+          <h3>Analysis</h3>
+          <p class="analysis-text">{{ tradeAnalysis }}</p>
+        </div>
+
+        <div class="trade-summary">
+          <div class="summary-column">
+            <h4>You're Giving:</h4>
+            <ul>
+              <li *ngFor="let tp of playersGivingAway">
+                {{ getPlayerName(tp.player) }} ({{ tp.player.position }})
+              </li>
+            </ul>
+          </div>
+
+          <div class="summary-column">
+            <h4>You're Receiving:</h4>
+            <ul>
+              <li *ngFor="let tp of playersReceiving">
+                {{ getPlayerName(tp.player) }} ({{ tp.player.position }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
