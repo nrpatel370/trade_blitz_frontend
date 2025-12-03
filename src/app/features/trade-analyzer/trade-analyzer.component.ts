@@ -191,65 +191,47 @@ export class TradeAnalyzerComponent implements OnInit {
     this.isEvaluating = true;
     this.errorMessage = '';
 
-    // For now, we'll do a simple client-side evaluation
-    // In the future, you can call a backend API for AI-powered analysis
-    this.performTradeEvaluation();
-  }
+    // Get player IDs
+    const givingIds = this.playersGivingAway.map(tp => tp.player.player_id || tp.player.playerId).filter(id => id);
+    const receivingIds = this.playersReceiving.map(tp => tp.player.player_id || tp.player.playerId).filter(id => id);
 
-  performTradeEvaluation(): void {
-    // Calculate total fantasy points for players giving away
-    let givingValue = 0;
-    this.playersGivingAway.forEach(tp => {
-      // You could fetch actual fantasy points from rankings here
-      // For now, using a simple placeholder
-      givingValue += this.getPlayerValue(tp.player);
+    console.log('Trade Evaluation Request:');
+    console.log('Giving IDs:', givingIds);
+    console.log('Receiving IDs:', receivingIds);
+    console.log('Selected Roster:', this.selectedRoster);
+
+    // Get current week and season from selected roster or use defaults
+    const currentWeek = 13; // You can make this dynamic
+    const currentSeason = 2025;
+    const scoringType = this.selectedRoster?.leagueFormat?.toLowerCase() || 
+                       this.selectedRoster?.league_format?.toLowerCase() || 
+                       'half-ppr';
+    
+    console.log('Week:', currentWeek, 'Season:', currentSeason, 'Scoring:', scoringType);
+
+    // Call backend API for analysis
+    this.playerService.analyzeTrade(
+      givingIds,
+      receivingIds,
+      currentWeek,
+      currentSeason,
+      scoringType.replace('-', '')
+    ).subscribe({
+      next: (response) => {
+        console.log('Trade Analysis Response:', response);
+        this.tradeGrade = response.grade;
+        this.tradeAnalysis = response.recommendation + ' ' + response.analysis;
+        this.tradeEvaluated = true;
+        this.isEvaluating = false;
+      },
+      error: (err: any) => {
+        console.error('Error evaluating trade:', err);
+        this.errorMessage = err.error?.error || 'Failed to evaluate trade. Please try again.';
+        this.isEvaluating = false;
+      }
     });
-
-    // Calculate total fantasy points for players receiving
-    let receivingValue = 0;
-    this.playersReceiving.forEach(tp => {
-      receivingValue += this.getPlayerValue(tp.player);
-    });
-
-    // Determine trade grade
-    const difference = receivingValue - givingValue;
-    const percentDiff = (difference / givingValue) * 100;
-
-    if (percentDiff > 15) {
-      this.tradeGrade = 'A+';
-      this.tradeAnalysis = 'Excellent trade! You\'re receiving significantly more value than you\'re giving up. This trade would greatly strengthen your roster.';
-    } else if (percentDiff > 5) {
-      this.tradeGrade = 'A';
-      this.tradeAnalysis = 'Great trade! You\'re getting good value in return. This should improve your team\'s overall performance.';
-    } else if (percentDiff > -5) {
-      this.tradeGrade = 'B';
-      this.tradeAnalysis = 'Fair trade. Both sides are getting relatively equal value. Consider your team needs and roster composition.';
-    } else if (percentDiff > -15) {
-      this.tradeGrade = 'C';
-      this.tradeAnalysis = 'Not recommended. You\'re giving up more value than you\'re receiving. Consider negotiating for better players or additional assets.';
-    } else {
-      this.tradeGrade = 'D';
-      this.tradeAnalysis = 'Poor trade! You\'re losing significant value. It\'s strongly recommended to reject this trade or ask for more in return.';
-    }
-
-    this.tradeEvaluated = true;
-    this.isEvaluating = false;
   }
 
-  // Helper to get player value (placeholder - can be enhanced with real data)
-  getPlayerValue(player: Player): number {
-    // This is a simplified calculation
-    // In production, you'd fetch this from player_rankings table
-    const positionValues: { [key: string]: number } = {
-      'QB': 20,
-      'RB': 18,
-      'WR': 16,
-      'TE': 14,
-      'K': 8,
-      'DEF': 10
-    };
-    return positionValues[player.position] || 10;
-  }
 
   getPlayerName(player: Player): string {
     return player.playerName || player.player_name || 'Unknown Player';

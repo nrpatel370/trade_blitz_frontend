@@ -71,4 +71,15 @@ export class PlayerService {
   syncFutureWeek(week: number, seasonType: string = 'REG'): Observable<any> {
     return this.http.post(`${environment.apiUrl}/rankings/sync-future-week`, { week, seasonType });
   }
+  
+  // Analyze trade
+  analyzeTrade(playersGiving: (number | undefined)[], playersReceiving: (number | undefined)[], currentWeek: number, season: number, scoringType: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/trade/analyze`, {
+      playersGiving,
+      playersReceiving,
+      currentWeek,
+      season,
+      scoringType
+    });
+  }
 }
