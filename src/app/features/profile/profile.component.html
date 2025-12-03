@@ -91,6 +91,7 @@
     </div>
 
     <!-- R-0006: Current Rosters Section -->
+    <!-- R-0006: Current Rosters Section -->
     <div class="profile-section">
       <div class="section-header">
         <h2>My Rosters</h2>
@@ -100,13 +101,18 @@
         <div *ngFor="let roster of rosters" class="roster-card">
           <h3>{{ getRosterName(roster) }}</h3>
           <p class="roster-format">{{ getLeagueFormat(roster) }}</p>
-          <!-- R-0009: Update roster button -->
-          <button (click)="startEditRoster(roster)" class="btn btn-edit-roster">
-            Edit Roster
-          </button>
+          <div class="roster-actions">
+            <!-- R-0009: Update roster button -->
+            <button (click)="startEditRoster(roster)" class="btn btn-edit-roster">
+              Edit Roster
+            </button>
+            <button (click)="deleteRoster(roster)" class="btn btn-delete">
+              Delete
+            </button>
+          </div>
         </div>
 
-        <div class="roster-card add-roster" *ngIf="rosters.length < 5">
+        <div class="roster-card add-roster" (click)="openCreateRoster()" *ngIf="rosters.length < 5">
           <span class="add-icon">+</span>
           <p>Add New Roster</p>
           <p class="roster-limit">{{ rosters.length }}/5 rosters</p>
@@ -117,43 +123,67 @@
       <div class="roster-editor" *ngIf="isEditingRoster && selectedRoster">
         <h3>Editing: {{ getRosterName(selectedRoster) }}</h3>
         
-        <div class="roster-editor-content">
-          <div class="current-players">
-            <h4>Current Players</h4>
-            <div *ngIf="rosterPlayers.length === 0" class="empty-state">
-              No players in roster yet
+        <div class="roster-slots">
+          <div *ngFor="let slotConfig of rosterStructure" class="roster-slot">
+            <div class="slot-header">
+              <span class="slot-label">{{ slotConfig.label }}</span>
+              <span class="slot-position">({{ slotConfig.position }})</span>
             </div>
-            <div *ngFor="let player of rosterPlayers" class="player-item">
-              <div class="player-details">
-                <span class="player-name">{{ getPlayerName(player) }}</span>
-                <span class="player-position">{{ player.position }} - {{ getTeamName(player) }}</span>
-              </div>
-              <button (click)="removePlayerFromRoster(player)" class="btn-remove">✕</button>
+            
+            <div class="slot-content">
+              <ng-container *ngIf="getPlayerInSlot(slotConfig.slot)?.player_id; else emptySlot">
+                <div class="player-in-slot">
+                  <div class="player-details">
+                    <span class="player-name">{{ getPlayerInSlot(slotConfig.slot)?.player_name }}</span>
+                    <span class="player-team">{{ getPlayerInSlot(slotConfig.slot)?.team_name }} - {{ getPlayerInSlot(slotConfig.slot)?.position }}</span>
+                  </div>
+                  <button (click)="removePlayerFromSelectedSlot(slotConfig.slot)" class="btn-remove">✕</button>
+                </div>
+              </ng-container>
+              
+              <ng-template #emptySlot>
+                <button (click)="selectSlot(slotConfig.slot)" class="btn-add-player">
+                  + Add Player
+                </button>
+              </ng-template>
             </div>
           </div>
+        </div>
 
-          <div class="player-search">
-            <h4>Add Players</h4>
-            <div class="search-input-wrapper">
+        <!-- Player Search (shown when a slot is selected) -->
+        <div class="player-search-modal" *ngIf="selectedSlot">
+          <div class="modal-overlay" (click)="selectedSlot = null"></div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Add Player to {{ getSlotConfig(selectedSlot)?.label }}</h4>
+              <button (click)="selectedSlot = null" class="btn-close">✕</button>
+            </div>
+
+            <div class="search-wrapper">
               <input 
                 type="text" 
                 [(ngModel)]="playerSearchQuery"
                 (input)="searchPlayers()"
                 placeholder="Search players..."
-                class="search-input">
+                class="search-input"
+                autocomplete="off">
               <span *ngIf="isSearching" class="searching">Searching...</span>
+              
+              <!-- Search results directly inside wrapper -->
+              <div class="search-results-dropdown" *ngIf="getFilteredSearchResults().length > 0">
+                <div *ngFor="let player of getFilteredSearchResults()" 
+                     class="search-result-item"
+                     (click)="addPlayerToSelectedSlot(player)">
+                  <div class="player-details">
+                    <span class="player-name">{{ getPlayerName(player) }}</span>
+                    <span class="player-position">{{ player.position }} - {{ getTeamName(player) }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="search-results" *ngIf="searchResults.length > 0">
-              <div *ngFor="let player of searchResults" 
-                   class="search-result-item"
-                   (click)="addPlayerToRoster(player)">
-                <div class="player-details">
-                  <span class="player-name">{{ getPlayerName(player) }}</span>
-                  <span class="player-position">{{ player.position }} - {{ getTeamName(player) }}</span>
-                </div>
-                <button class="btn-add">Add</button>
-              </div>
+            <div class="no-results" *ngIf="playerSearchQuery.length >= 2 && getFilteredSearchResults().length === 0 && !isSearching">
+              <p>No {{ getSlotConfig(selectedSlot)?.position }} players found</p>
             </div>
           </div>
         </div>
@@ -161,8 +191,45 @@
         <!-- R-0011: Save button -->
         <div class="roster-editor-actions">
           <button (click)="saveRosterChanges()" class="btn btn-primary">
-            Save Changes
+            Done Editing
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Roster Modal -->
+    <div class="create-roster-modal" *ngIf="isCreatingRoster">
+      <div class="modal-overlay" (click)="closeCreateRoster()"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create New Roster</h3>
+          <button (click)="closeCreateRoster()" class="btn-close">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="rosterName">Roster Name</label>
+            <input 
+              type="text" 
+              id="rosterName"
+              [(ngModel)]="newRosterName"
+              placeholder="Enter roster name"
+              class="input-field">
+          </div>
+
+          <div class="form-group">
+            <label for="leagueFormat">League Format</label>
+            <select id="leagueFormat" [(ngModel)]="newRosterFormat" class="input-field">
+              <option value="Standard">Standard</option>
+              <option value="Half-PPR">Half-PPR</option>
+              <option value="PPR">PPR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button (click)="createRoster()" class="btn btn-primary">Create Roster</button>
+          <button (click)="closeCreateRoster()" class="btn btn-secondary">Cancel</button>
         </div>
       </div>
     </div>

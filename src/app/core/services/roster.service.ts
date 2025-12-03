@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Roster, CreateRosterRequest } from '../models/roster.model';
+import { Roster, CreateRosterRequest, RosterWithPositions, RosterSlotConfig } from '../models/roster.model';
 import { Player } from '../models/player.model';
 
 @Injectable({
@@ -16,8 +16,8 @@ export class RosterService {
     return this.http.get<{ rosters: Roster[] }>(this.apiUrl);
   }
 
-  getRosterById(id: number): Observable<{ roster: Roster }> {
-    return this.http.get<{ roster: Roster }>(`${this.apiUrl}/${id}`);
+  getRosterById(id: number): Observable<RosterWithPositions> {
+    return this.http.get<RosterWithPositions>(`${this.apiUrl}/${id}`);
   }
 
   createRoster(data: CreateRosterRequest): Observable<any> {
@@ -32,15 +32,15 @@ export class RosterService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  getRosterPlayers(rosterId: number): Observable<{ players: Player[] }> {
-    return this.http.get<{ players: Player[] }>(`${this.apiUrl}/${rosterId}/players`);
+  getRosterStructure(): Observable<{ structure: RosterSlotConfig[] }> {
+    return this.http.get<{ structure: RosterSlotConfig[] }>(`${this.apiUrl}/structure`);
   }
 
-  addPlayerToRoster(rosterId: number, playerId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${rosterId}/players`, { playerId });
+  addPlayerToSlot(rosterId: number, positionSlot: string, playerId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${rosterId}/add-player`, { positionSlot, playerId });
   }
 
-  removePlayerFromRoster(rosterId: number, playerId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${rosterId}/players/${playerId}`);
+  removePlayerFromSlot(rosterId: number, positionSlot: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${rosterId}/remove-player`, { positionSlot });
   }
 }
