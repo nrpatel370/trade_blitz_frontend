@@ -37,6 +37,88 @@
           <p>No performance data available yet</p>
         </div>
       </div>
+
+      <!-- Feedback Form -->
+      <div class="performers-card feedback-card">
+        <h2 class="card-title">Send Feedback</h2>
+        <p class="card-subtitle">Help us improve Trade Blitz</p>
+
+        <!-- Success Message -->
+        <div class="feedback-success" *ngIf="feedbackSubmitted">
+          <span class="success-icon">✓</span>
+          <p>Thank you for your feedback!</p>
+        </div>
+
+        <!-- Feedback Form -->
+        <form class="feedback-form" *ngIf="!feedbackSubmitted" (ngSubmit)="submitFeedback()">
+          <!-- Category Dropdown -->
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" [(ngModel)]="feedbackData.category" name="category" class="form-input">
+              <option value="general">General Feedback</option>
+              <option value="bug">Bug Report</option>
+              <option value="feature">Feature Request</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Subject -->
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input 
+              type="text" 
+              id="subject" 
+              [(ngModel)]="feedbackData.subject" 
+              name="subject"
+              class="form-input" 
+              placeholder="Brief summary..."
+            />
+          </div>
+
+          <!-- Message -->
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea 
+              id="message" 
+              [(ngModel)]="feedbackData.message" 
+              name="message"
+              class="form-input form-textarea" 
+              placeholder="Tell us more..."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <!-- Rating -->
+          <div class="form-group">
+            <label>Rating</label>
+            <div class="star-rating">
+              <span 
+                *ngFor="let star of [1, 2, 3, 4, 5]" 
+                class="star" 
+                [class.filled]="star <= feedbackData.rating"
+                [class.hovered]="star <= hoveredRating"
+                (click)="setRating(star)"
+                (mouseenter)="hoveredRating = star"
+                (mouseleave)="hoveredRating = 0"
+              >★</span>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div class="feedback-error" *ngIf="feedbackError">
+            {{ feedbackError }}
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="feedback-button" 
+            [disabled]="isSubmittingFeedback"
+          >
+            {{ isSubmittingFeedback ? 'Submitting...' : 'Submit Feedback' }}
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- R-0002 & R-0003: Center Content -->
