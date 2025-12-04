@@ -23,9 +23,9 @@
             <span class="rank">{{ i + 1 }}</span>
             <div class="player-info">
               <span class="player-name">{{ getPlayerName(player) }}</span>
-              <span class="player-team">{{ getTeamName(player) }} - {{ player.position }}</span>
+              <span class="player-team">{{ getTeamName(player) }} - {{ getPosition(player) }}</span>
             </div>
-            <span class="player-points best">{{ getActualPoints(player).toFixed(1) }} pts</span>
+            <span class="player-points best">{{ getActualPoints(player) }} pts</span>
           </div>
         </div>
 
@@ -177,9 +177,10 @@
             <span class="rank">{{ i + 1 }}</span>
             <div class="player-info">
               <span class="player-name">{{ getPlayerName(player) }}</span>
-              <span class="player-team">{{ getTeamName(player) }} - {{ player.position }}</span>
+              <span class="player-team">{{ getTeamName(player) }} - {{ getPosition(player) }}</span>
+              <span class="player-projection">Proj: {{ getProjectedPoints(player) }} pts</span>
             </div>
-            <span class="player-points worst">{{ getActualPoints(player).toFixed(1) }} pts</span>
+            <span class="player-points worst">{{ getActualPoints(player) }} pts</span>
           </div>
         </div>
 

@@ -48,6 +48,18 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.player-team {
+  color: #b8b8d1;
+  font-size: 0.75rem;
+}
+
+.player-projection {
+  color: #a78bfa;
+  font-size: 0.7rem;
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+
 .card-title {
   font-size: 1.5rem;
   color: #ffffff;

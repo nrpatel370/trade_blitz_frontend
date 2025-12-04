@@ -41,11 +41,14 @@ export class HomeComponent implements OnInit {
   }
 
   loadPerformers(): void {
-    // R-0004: Load best performers
+    const currentWeek = 13; // Last completed week
+    const currentSeason = 2025;
+
+    // R-0004: Load top 5 performers from last week
     this.isLoadingBest = true;
-    this.playerService.getBestPerformers(10).subscribe({
+    this.playerService.getPlayerRankings(currentWeek, currentSeason, 'standard', 'points', 'desc', null).subscribe({
       next: (response) => {
-        this.bestPerformers = response.bestPerformers || [];
+        this.bestPerformers = (response.rankings || []).slice(0, 5);
         this.isLoadingBest = false;
       },
       error: (err) => {
@@ -54,30 +57,49 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    // R-0005: Load worst performers
+    // R-0005: Load buy low candidates (players who underperformed last week but have good projections)
     this.isLoadingWorst = true;
-    this.playerService.getWorstPerformers(10).subscribe({
+    this.playerService.getPlayerRankings(currentWeek, currentSeason, 'standard', 'points', 'asc', null).subscribe({
       next: (response) => {
-        this.worstPerformers = response.worstPerformers || [];
+        // Get players with lowest points last week
+        const underperformers = (response.rankings || []).slice(0, 20);
+        
+        // Filter for players who have good projected points (likely to bounce back)
+        const buyLowCandidates = underperformers.filter((player: { projected_points: number; fantasy_points: number; }) => {
+          const projectedPoints = player.projected_points || 0;
+          const actualPoints = player.fantasy_points || 0;
+          // Players who scored low but are projected higher (bounce-back candidates)
+          return projectedPoints > actualPoints && projectedPoints > 8;
+        }).slice(0, 5);
+        
+        this.worstPerformers = buyLowCandidates.length > 0 ? buyLowCandidates : underperformers.slice(0, 5);
         this.isLoadingWorst = false;
       },
       error: (err) => {
-        console.error('Error loading worst performers:', err);
+        console.error('Error loading buy low candidates:', err);
         this.isLoadingWorst = false;
       }
     });
   }
 
-  getPlayerName(player: Player): string {
-    return player.playerName || player.player_name || 'Unknown Player';
+  getPlayerName(player: any): string {
+    return player.player_name || player.playerName || 'Unknown Player';
   }
 
-  getTeamName(player: Player): string {
-    return player.teamName || player.team_name || '';
+  getTeamName(player: any): string {
+    return player.team_name || player.teamName || '';
   }
 
-  getActualPoints(player: Player): number {
-    return player.actualPoints || player.actual_points || 0;
+  getActualPoints(player: any): number {
+    return player.fantasy_points || player.actualPoints || player.actual_points || 0;
+  }
+
+  getProjectedPoints(player: any): number {
+    return player.projected_points || player.projectedPoints || 0;
+  }
+
+  getPosition(player: any): string {
+    return player.position || '';
   }
 
   // Feedback methods
