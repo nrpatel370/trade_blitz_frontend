@@ -1,11 +1,27 @@
 <div class="trade-analyzer-container">
   <div class="trade-analyzer-content">
+
+    <div class="sign-in-required" *ngIf="!isAuthenticated">
+      <div class="sign-in-card">
+        <div class="lock-icon">🔒</div>
+        <h2>Sign In Required</h2>
+        <p>You need to be signed in to use the Trade Analyzer.</p>
+        <p class="subtext">Create an account or sign in to analyze your fantasy football trades and make better decisions!</p>
+        <div class="sign-in-actions">
+          <a routerLink="/login" class="btn btn-primary">Sign In</a>
+          <a routerLink="/register" class="btn btn-secondary">Create Account</a>
+        </div>
+      </div>
+    </div>
+
+     <div *ngIf="isAuthenticated">
     <!-- Header -->
     <div class="analyzer-header">
       <h1 class="page-title">Trade Analyzer</h1>
       <p class="page-subtitle">Evaluate your fantasy football trades</p>
     </div>
 
+   
     <!-- R-0026, R-0028: Roster Selection -->
     <div class="roster-selection">
       <label for="rosterSelect">Select Your Roster:</label>
@@ -188,5 +204,6 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>

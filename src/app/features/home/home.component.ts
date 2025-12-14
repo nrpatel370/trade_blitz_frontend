@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadPerformers(): void {
-    const currentWeek = 13; // Last completed week
+    const currentWeek = 15; // Last completed week
     const currentSeason = 2025;
 
     // R-0004: Load top 5 performers from last week

@@ -198,9 +198,12 @@ export class PlayerRankingsComponent implements OnInit {
   }
 
   getCurrentNFLWeek(): number {
-    // You can make this dynamic or update it manually
-    // For now, let's say we're currently in week 13
-    return 13;
+    const week = {
+      
+      
+
+    };
+    return 15;
   }
 
   isFutureWeek(): boolean {

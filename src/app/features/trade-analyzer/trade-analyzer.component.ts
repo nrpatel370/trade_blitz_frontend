@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RosterService } from '../../core/services/roster.service';
 import { PlayerService } from '../../core/services/player.service';
+import { RouterLink } from '@angular/router';
 import { Roster, RosterWithPositions } from '../../core/models/roster.model';
 import { Player } from '../../core/models/player.model';
+import { AuthService } from '../../core/services/auth.service';
 
 interface TradePlayer {
   player: Player;
@@ -14,13 +16,14 @@ interface TradePlayer {
 @Component({
   selector: 'app-trade-analyzer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './trade-analyzer.component.html',
   styleUrl: './trade-analyzer.component.css'
 })
 export class TradeAnalyzerComponent implements OnInit {
   rosterService = inject(RosterService);
   playerService = inject(PlayerService);
+  authService = inject(AuthService);
 
   // R-0026, R-0028: User's rosters
   rosters: Roster[] = [];
@@ -46,8 +49,15 @@ export class TradeAnalyzerComponent implements OnInit {
   isEvaluating = false;
   errorMessage = '';
 
-  ngOnInit(): void {
-    this.loadRosters();
+  isAuthenticated = false;
+
+ ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+      if (isAuth) {
+        this.loadRosters();
+      }
+    });
   }
 
   // Load user's rosters
@@ -201,7 +211,7 @@ export class TradeAnalyzerComponent implements OnInit {
     console.log('Selected Roster:', this.selectedRoster);
 
     // Get current week and season from selected roster or use defaults
-    const currentWeek = 13; // You can make this dynamic
+    const currentWeek = 14; // You can make this dynamic
     const currentSeason = 2025;
     const scoringType = this.selectedRoster?.leagueFormat?.toLowerCase() || 
                        this.selectedRoster?.league_format?.toLowerCase() || 

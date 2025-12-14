@@ -405,6 +405,81 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Sign-in Required Message */
+.sign-in-required {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.sign-in-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+}
+
+.lock-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.sign-in-card h2 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.sign-in-card p {
+  color: #b8b8d1;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.sign-in-card .subtext {
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.sign-in-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.sign-in-actions .btn {
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.sign-in-actions .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.sign-in-actions .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+.sign-in-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sign-in-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 /* Responsive */
 @media (max-width: 968px) {
   .trade-boxes {
