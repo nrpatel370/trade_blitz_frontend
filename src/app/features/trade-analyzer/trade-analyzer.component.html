@@ -171,7 +171,7 @@
     </div>
 
     <!-- Trade Evaluation Results -->
-    <div class="trade-results" *ngIf="tradeEvaluated">
+    <div class="trade-results" *ngIf="tradeEvaluated" #tradeResults>
       <div class="results-card" [ngClass]="getTradeGradeClass()">
         <div class="grade-section">
           <h2>Trade Grade</h2>

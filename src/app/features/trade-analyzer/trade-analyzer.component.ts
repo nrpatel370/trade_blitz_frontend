@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RosterService } from '../../core/services/roster.service';
@@ -24,6 +24,8 @@ export class TradeAnalyzerComponent implements OnInit {
   rosterService = inject(RosterService);
   playerService = inject(PlayerService);
   authService = inject(AuthService);
+
+  @ViewChild('tradeResults') tradeResults?: ElementRef;
 
   // R-0026, R-0028: User's rosters
   rosters: Roster[] = [];
@@ -233,6 +235,13 @@ export class TradeAnalyzerComponent implements OnInit {
         this.tradeAnalysis = response.recommendation + ' ' + response.analysis;
         this.tradeEvaluated = true;
         this.isEvaluating = false;
+        setTimeout(() => {
+          console.log('tradeResults exists?', !!this.tradeResults?.nativeElement);
+          this.tradeResults?.nativeElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 1000);
       },
       error: (err: any) => {
         console.error('Error evaluating trade:', err);
@@ -266,4 +275,5 @@ export class TradeAnalyzerComponent implements OnInit {
         return '';
     }
   }
+
 }
