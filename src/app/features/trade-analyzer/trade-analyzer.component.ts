@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { Roster, RosterWithPositions } from '../../core/models/roster.model';
 import { Player } from '../../core/models/player.model';
 import { AuthService } from '../../core/services/auth.service';
+import { AlertService } from '../../core/services/alert.service';
 
 interface TradePlayer {
   player: Player;
@@ -24,6 +25,7 @@ export class TradeAnalyzerComponent implements OnInit {
   rosterService = inject(RosterService);
   playerService = inject(PlayerService);
   authService = inject(AuthService);
+  alertService = inject(AlertService);
 
   @ViewChild('tradeResults') tradeResults?: ElementRef;
 
@@ -244,6 +246,7 @@ export class TradeAnalyzerComponent implements OnInit {
         }, 1000);
       },
       error: (err: any) => {
+        this.alertService.error('Error evaluating trade', 'Please try again!');
         console.error('Error evaluating trade:', err);
         this.errorMessage = err.error?.error || 'Failed to evaluate trade. Please try again.';
         this.isEvaluating = false;

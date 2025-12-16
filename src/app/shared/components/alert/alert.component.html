@@ -1,0 +1,15 @@
+<div class="alerts-container">
+      <div *ngFor="let alert of alerts" 
+           class="alert" 
+           [ngClass]="'alert-' + alert.type"
+           [@slideIn]>
+        <div class="alert-content">
+          <div class="alert-icon">{{ getIcon(alert.type) }}</div>
+          <div class="alert-text">
+            <div class="alert-title">{{ alert.title }}</div>
+            <div class="alert-message">{{ alert.message }}</div>
+          </div>
+          <button class="alert-close" (click)="removeAlert(alert)">✕</button>
+        </div>
+      </div>
+    </div>

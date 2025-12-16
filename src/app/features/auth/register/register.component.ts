@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class RegisterComponent {
   authService = inject(AuthService);
   router = inject(Router);
+  alertService = inject(AlertService)
 
   username = '';
   email = '';
@@ -26,6 +28,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (!this.username || !this.email || !this.password) {
+      this.alertService.error("Registration Failed","Please fill in all required fields");
       this.errorMessage = 'Please fill in all required fields';
       return;
     }
@@ -49,6 +52,7 @@ export class RegisterComponent {
         this.router.navigate(['/profile']);
       },
       error: (err) => {
+        this.alertService.error("Registration Failed","Please try again.");
         this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
         this.isLoading = false;
       }

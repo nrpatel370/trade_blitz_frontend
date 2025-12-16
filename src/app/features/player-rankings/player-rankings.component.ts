@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../core/services/player.service';
 import { PlayerRanking, RankingsResponse } from '../../core/models/player.model';
+import { AlertService } from '../../core/services/alert.service';
 
 @Component({
   selector: 'app-player-rankings',
@@ -13,6 +14,7 @@ import { PlayerRanking, RankingsResponse } from '../../core/models/player.model'
 })
 export class PlayerRankingsComponent implements OnInit {
   playerService = inject(PlayerService);
+  alertService = inject(AlertService);
 
   rankings: PlayerRanking[] = [];
   filteredRankings: PlayerRanking[] = [];
@@ -69,6 +71,7 @@ export class PlayerRankingsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        this.alertService.error("Error loading rankings:", "Please try again.")
         console.error('Error loading rankings:', err);
         this.errorMessage = 'Failed to load rankings. Please try again.';
         this.isLoading = false;
@@ -102,6 +105,7 @@ export class PlayerRankingsComponent implements OnInit {
         }, 2000);
       },
       error: (err) => {
+        this.alertService.error('Error syncing', 'Please try again')
         console.error('Error syncing:', err);
         this.errorMessage = 'Failed to sync data. Please try again.';
         this.isSyncing = false;

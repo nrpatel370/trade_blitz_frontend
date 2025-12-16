@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginComponent {
   authService = inject(AuthService);
   router = inject(Router);
+  alertService = inject(AlertService);
 
   email = '';
   password = '';
@@ -35,6 +37,7 @@ export class LoginComponent {
         this.router.navigate(['/profile']);
       },
       error: (err) => {
+        this.alertService.error('Login failed', 'Please sign in again to continue');
         this.errorMessage = err.error?.error || 'Login failed. Please try again.';
         this.isLoading = false;
       }

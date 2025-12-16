@@ -1,4 +1,3 @@
-// ===== src/app/shared/components/navbar/navbar.component.ts =====
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
