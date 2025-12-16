@@ -1,0 +1,36 @@
+<div class="help-container">
+  <div class="help-content">
+    <!-- Header -->
+    <div class="help-header">
+      <h1 class="page-title">Help & FAQ</h1>
+      <p class="page-subtitle">Find answers to common questions about Trade Blitz</p>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="faq-list">
+        <div *ngFor="let faq of faqs" class="faq-item" [class.open]="faq.open">
+          <div class="faq-question" (click)="toggleFAQ(faq)">
+            <h3>{{ faq.question }}</h3>
+            <span class="toggle-icon">{{ faq.open ? '−' : '+' }}</span>
+          </div>
+          <div class="faq-answer" *ngIf="faq.open">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="contact-section">
+      <h2>Still Need Help?</h2>
+      <p>If you can't find the answer you're looking for, feel free to reach out to our support team.</p>
+      <div class="contact-info">
+        <p><strong>Email:</strong> support&#64;tradeblitz.com</p>
+        <p><strong>Response Time:</strong> Within 24 hours</p>
+      </div>
+    </div>
+  </div>
+</div>

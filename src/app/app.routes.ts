@@ -28,6 +28,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/trade-analyzer/trade-analyzer.component').then(m => m.TradeAnalyzerComponent)
   },
   {
+    path: 'help',
+    loadComponent: () => import('./features/help/help.component').then(m => m.HelpComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }
