@@ -7,6 +7,7 @@ import { PlayerService } from '../../core/services/player.service';
 import { FeedbackService } from '../../core/services/feedback.service';
 import { Player } from '../../core/models/player.model';
 import { FeedbackRequest } from '../../core/models/feedback.model';
+import { NflSeasonService } from '../../core/services/nfl-season.service';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ import { FeedbackRequest } from '../../core/models/feedback.model';
 export class HomeComponent implements OnInit {
   playerService = inject(PlayerService);
   feedbackService = inject(FeedbackService);
+  nflweekService = inject(NflSeasonService)
   
   bestPerformers: Player[] = [];
   worstPerformers: Player[] = [];
@@ -41,8 +43,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadPerformers(): void {
-    const currentWeek = 15; // Last completed week
-    const currentSeason = 2025;
+    const currentWeek = this.nflweekService.getLastCompletedWeek(); // Last completed week
+    const currentSeason = this.nflweekService.getCurrentSeason();
 
     // R-0004: Load top 5 performers from last week
     this.isLoadingBest = true;

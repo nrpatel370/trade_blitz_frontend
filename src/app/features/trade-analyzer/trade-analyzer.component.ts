@@ -8,6 +8,7 @@ import { Roster, RosterWithPositions } from '../../core/models/roster.model';
 import { Player } from '../../core/models/player.model';
 import { AuthService } from '../../core/services/auth.service';
 import { AlertService } from '../../core/services/alert.service';
+import { NflSeasonService } from '../../core/services/nfl-season.service';
 
 interface TradePlayer {
   player: Player;
@@ -26,6 +27,7 @@ export class TradeAnalyzerComponent implements OnInit {
   playerService = inject(PlayerService);
   authService = inject(AuthService);
   alertService = inject(AlertService);
+  nflWeekService = inject(NflSeasonService);
 
   @ViewChild('tradeResults') tradeResults?: ElementRef;
 
@@ -215,8 +217,8 @@ export class TradeAnalyzerComponent implements OnInit {
     console.log('Selected Roster:', this.selectedRoster);
 
     // Get current week and season from selected roster or use defaults
-    const currentWeek = 14; // You can make this dynamic
-    const currentSeason = 2025;
+    const currentWeek = this.nflWeekService.getCurrentWeek();
+    const currentSeason = this.nflWeekService.getCurrentSeason();
     const scoringType = this.selectedRoster?.leagueFormat?.toLowerCase() || 
                        this.selectedRoster?.league_format?.toLowerCase() || 
                        'half-ppr';

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../core/services/player.service';
 import { PlayerRanking, RankingsResponse } from '../../core/models/player.model';
 import { AlertService } from '../../core/services/alert.service';
+import { NflSeasonService } from '../../core/services/nfl-season.service';
 
 @Component({
   selector: 'app-player-rankings',
@@ -15,6 +16,7 @@ import { AlertService } from '../../core/services/alert.service';
 export class PlayerRankingsComponent implements OnInit {
   playerService = inject(PlayerService);
   alertService = inject(AlertService);
+  nflWeekService = inject(NflSeasonService);
 
   rankings: PlayerRanking[] = [];
   filteredRankings: PlayerRanking[] = [];
@@ -26,8 +28,8 @@ export class PlayerRankingsComponent implements OnInit {
   successMessage = '';
 
   // Filters
-  currentWeek = 10;
-  currentSeason = 2025;
+  currentWeek = this.nflWeekService.getCurrentWeek();
+  currentSeason = this.nflWeekService.getCurrentSeason();
   scoringType: 'standard' | 'ppr' = 'standard';
   selectedPosition = 'ALL';
   selectedTeam = 'ALL';         
@@ -202,12 +204,8 @@ export class PlayerRankingsComponent implements OnInit {
   }
 
   getCurrentNFLWeek(): number {
-    const week = {
-      
-      
-
-    };
-    return 15;
+    console.log(this.nflWeekService.getCurrentWeek())
+    return this.nflWeekService.getCurrentWeek();
   }
 
   isFutureWeek(): boolean {
