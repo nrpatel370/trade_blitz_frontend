@@ -22,6 +22,4 @@ export class UserService {
   updateProfileIcon(profileIcon: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/profile-icon`, { profileIcon });
   }
-
-
 }

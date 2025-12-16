@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Roster, CreateRosterRequest, RosterWithPositions, RosterSlotConfig } from '../models/roster.model';
-import { Player } from '../models/player.model';
 
 @Injectable({
   providedIn: 'root'

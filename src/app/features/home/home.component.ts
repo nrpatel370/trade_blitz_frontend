@@ -1,4 +1,3 @@
-// ===== src/app/features/home/home.component.ts =====
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
